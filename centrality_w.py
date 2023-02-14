@@ -10,7 +10,7 @@ import matplotlib.dates as mdates
 import os
 
 token = 'panda'
-T = timedelta(days=60)# 间隔为T的时间保持影响力，单位为天
+T = timedelta(days=30)# 间隔为T的时间保持影响力，单位为天
 s = timedelta(days=5)# 起始时间间隔，单位为天
 
 def centrality_w(token,T,s):
@@ -62,9 +62,10 @@ def centrality_w(token,T,s):
         # three degrees
         cputime = time.process_time()
         # x * y不再执行矩阵乘法，而是逐元素乘法（就像 NumPy 数组一样）
-        xs = a*A@b
-        xs = a*A@b + a*A@xs
-        xs = a*A@b + a*A@xs
+        xs = b + a*A@b
+        xs = b + a*A@xs
+        xs = b + a*A@xs
+        xs = xs/max(abs(xs))
         cputime_s.append(time.process_time() - cputime)
 
         # proportion

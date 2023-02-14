@@ -5,7 +5,7 @@ import scipy.sparse.linalg as spla
 import matplotlib.pyplot as plt
 import os
 
-token = 'MKR'# MKR_1e-6不让做了
+token = 'panda'# MKR_1e-6不让做了
 beta = 1e-6
 
 def centop_nw_br(token,beta):
@@ -38,17 +38,17 @@ def centop_nw_br(token,beta):
     # GMRES
     x, exitCode = spla.gmres(I-a*A, b) # 默认restart=20,x即为完整的kazt中心性向量,exitCode=0表示success
     x = x/max(abs(x)) # 归一化
-    xT, exitCode = spla.gmres(I-a*AT, x) 
+    xT, exitCode = spla.gmres(I-a*AT, b) 
     xT = xT/max(abs(xT)) # 归一化
 
     # three degrees
-    xs = a*A@b
-    xs = xs + a*A@xs
-    xs = xs + a*A@xs
+    xs = b + a*A@b
+    xs = b + a*A@xs
+    xs = b + a*A@xs
     xs = xs/max(abs(xs))
-    xsT = a*AT@b
-    xsT = xsT + a*A@xsT
-    xsT = xsT + a*A@xsT
+    xsT = b + a*A@b
+    xsT = b + a*A@xsT
+    xsT = b + a*A@xsT
     xsT = xsT/max(abs(xsT))
 
 

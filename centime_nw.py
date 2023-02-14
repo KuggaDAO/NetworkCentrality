@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import os
 
-token = 'people'
+token = 'panda'
 T = timedelta(days=10)# 间隔为T的时间
 beta = 0.0001
 
@@ -51,10 +51,11 @@ def centime_nw(token,T,beta):
         n = G.number_of_nodes()
         A = nx.to_scipy_sparse_array(G, dtype='f') # 按照G.nodes()顺序,csr按照行的稀疏矩阵
         I = np.diag(np.ones(n))
+        b = np.ones(n)
 
-        if t == start_time:
-            x = np.ones(n)
-            xs = np.ones(n)
+        if t == end_time - T:
+            x = b
+            xs = b
 
         # alpha--spectrum
         rho, vec = spla.eigs(A, k=1) # vec用不到
@@ -69,9 +70,10 @@ def centime_nw(token,T,beta):
         # three degrees
         cputime = time.process_time()
         # x * y不再执行矩阵乘法，而是逐元素乘法（就像 NumPy 数组一样）
-        xs = a*A@xs
-        xs = xs + a*A@xs
-        xs = xs + a*A@xs
+        x0 = xs
+        xs = x0 + a*A@xs
+        xs = x0 + a*A@xs
+        xs = x0 + a*A@xs
         xs = xs/max(abs(xs))
         cputime_s.append(time.process_time() - cputime)
 

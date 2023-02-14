@@ -11,8 +11,8 @@ import heapq # 数组最大n个值
 import os
 
 # settings
-token = 'bank'
-T = timedelta(days=60)# 间隔为T的时间保持影响力，单位为天
+token = 'panda'
+T = timedelta(days=30)# 间隔为T的时间保持影响力，单位为天
 s = timedelta(days=5)# 起始时间间隔，单位为天
 # percent = [0.010,0.020,0.030,0.040,0.050,0.060,0.070,0.080,0.090]
 percent = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009]
@@ -79,9 +79,9 @@ def meanr(token,T,s,percent):
         # three degrees
         cputime = time.process_time()
         # x * y不再执行矩阵乘法，而是逐元素乘法（就像 NumPy 数组一样）
-        xs = a*A@b
-        xs = a*A@b + a*A@xs
-        xs = a*A@b + a*A@xs
+        xs = b + a*A@b
+        xs = b + a*A@xs
+        xs = b + a*A@xs
         cputime_s.append(time.process_time() - cputime)
 
         # top n/total
