@@ -21,12 +21,12 @@ def centime_w(token,T):
 
     start_time = df.iloc[0,-1]
     end_time = df.iloc[-1,-1]
-    t = start_time
-    times = []
+    t = end_time - T
     cputime_gmres = []
     cputime_s = []
 
     # 不考虑尾观察时长未到T的情况
+    # 注意逆序
     while t >= start_time and t+T <=end_time:
 
         # graph nodes完整
@@ -73,19 +73,10 @@ def centime_w(token,T):
         xs = xs/max(abs(xs))
         cputime_s.append(time.process_time() - cputime)
 
-        times.append(t)
-        t = t + T
+        t = t - T
 
     fig = plt.figure(figsize=(10,5))
-    ax1 = fig.add_subplot(2,1,1)
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    ax1.xaxis.set_major_locator(mdates.MonthLocator())
-    ax1.plot(times, cputime_gmres, 'r', label = 'solve_gmres')
-    ax1.plot(times, cputime_s, 'b', label = 'three_degrees')
-    plt.legend()
-    plt.xlabel('time')
-    plt.ylabel('cputime')
-    ax2 = fig.add_subplot(2,1,2)
+    ax2 = fig.add_subplot(1,1,1)
     ax2.scatter(range(len(x)), x, c='r', marker='o', label = 'kazt')
     ax2.scatter(range(len(xs)), xs, c='b',  marker='*', alpha = 0.5, label = 'three')
     plt.legend()
