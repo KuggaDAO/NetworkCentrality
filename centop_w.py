@@ -12,10 +12,14 @@ import os
 
 # settings
 token = 'panda'
-T = timedelta(days=30)# 间隔为T的时间保持影响力，单位为天
+T = timedelta(days=10)# 间隔为T的时间保持影响力，单位为天
 s = timedelta(days=5)# 起始时间间隔，单位为天
 # percent = [0.010,0.020,0.030,0.040,0.050,0.060,0.070,0.080,0.090]
 percent = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009]
+
+def scale(n):
+    # 创建叶子结点中心性与网络规模的联系
+    return n
 
 def meanr(token,T,s,percent):
 
@@ -63,9 +67,9 @@ def meanr(token,T,s,percent):
 
         # prepare
         n = G.number_of_nodes()
-        b = np.ones(n)
+        b = scale(n) * np.ones(n)
         A = nx.to_scipy_sparse_array(G) # 按照G.nodes()顺序,csr按照行的稀疏矩阵
-        I = np.diag(b)
+        I = np.diag(np.ones(n))
 
         # alpha--spectrum
         rho, vec = spla.eigs(A, k=1) # vec用不到

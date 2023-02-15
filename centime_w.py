@@ -12,6 +12,10 @@ import os
 token = 'panda'
 T = timedelta(days=30)# 间隔为T的时间
 
+def scale(n):
+    # 创建叶子结点中心性与网络规模的联系
+    return n
+
 def centime_w(token,T):
 
     df = pd.read_csv('./data/'+token+'.csv',low_memory= False,usecols=["from", "to", "value", "metadata.blockTimestamp"])
@@ -49,7 +53,7 @@ def centime_w(token,T):
         n = G.number_of_nodes()
         A = nx.to_scipy_sparse_array(G) # 按照G.nodes()顺序,csr按照行的稀疏矩阵
         I = np.diag(np.ones(n))
-        b = np.ones(n)
+        b = scale(n) * np.ones(n)
 
         if t == end_time - T:
             x = b

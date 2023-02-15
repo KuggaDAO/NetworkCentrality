@@ -7,6 +7,10 @@ import os
 
 token = 'panda'
 
+def scale(n):
+    # 创建叶子结点中心性与网络规模的联系
+    return n
+
 def centop_w_br(token):
 
     df = pd.read_csv('./data/'+token+'.csv',low_memory= False,usecols=["from", "to", "value", "metadata.blockTimestamp"])
@@ -28,7 +32,7 @@ def centop_w_br(token):
     A = nx.to_scipy_sparse_array(G, dtype='f') # 按照G.nodes()顺序,csr按照行的稀疏矩阵
     AT = A.T
     I = np.diag(np.ones(n))
-    b = np.ones(n)
+    b = scale(n) * np.ones(n)
 
     # alpha--spectrum
     rho, vec = spla.eigs(A, k=1) # vec用不到

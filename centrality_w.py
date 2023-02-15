@@ -13,6 +13,10 @@ token = 'panda'
 T = timedelta(days=30)# 间隔为T的时间保持影响力，单位为天
 s = timedelta(days=5)# 起始时间间隔，单位为天
 
+def scale(n):
+    # 创建叶子结点中心性与网络规模的联系
+    return n
+
 def centrality_w(token,T,s):
 
     df = pd.read_csv('./data/'+token+'.csv',low_memory= False,usecols=["from", "to", "value", "metadata.blockTimestamp"])
@@ -46,9 +50,9 @@ def centrality_w(token,T,s):
 
         # prepare
         n = G.number_of_nodes()
-        b = np.ones(n)
+        b = scale(n) * np.ones(n)
         A = nx.to_scipy_sparse_array(G) # 按照G.nodes()顺序,csr按照行的稀疏矩阵
-        I = np.diag(b)
+        I = np.diag(np.ones(n))
 
         # alpha--spectrum
         rho, vec = spla.eigs(A, k=1) # vec用不到
