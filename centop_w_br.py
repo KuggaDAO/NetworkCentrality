@@ -63,6 +63,16 @@ def centop_w_br(token):
     plt.legend()
     plt.xlabel('broadcast')
     plt.ylabel('receive')
+
+    # fit
+    p = np.polyfit(x,xT,1)
+    p = np.poly1d(p)
+    ax1.plot(x, p(x), color='r', linestyle='dashed', linewidth=0.5)
+    ps = np.polyfit(xs,xsT,1)
+    ps = np.poly1d(ps)
+    ax1.plot(x, ps(x), color='b', linestyle='dashed', linewidth=0.5)
+
+    # save
     figure_save_path = './cen/centop_w_br'
     if not os.path.exists(figure_save_path):
         os.makedirs(figure_save_path)

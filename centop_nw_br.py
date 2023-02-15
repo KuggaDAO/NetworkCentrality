@@ -5,7 +5,7 @@ import scipy.sparse.linalg as spla
 import matplotlib.pyplot as plt
 import os
 
-token = 'panda'# MKR_1e-6不让做了
+token = 'people'# MKR_1e-6不让做了
 beta = 1e-6
 
 def scale(n):
@@ -58,12 +58,22 @@ def centop_nw_br(token,beta):
 
     fig = plt.figure()
     ax1 = fig.add_subplot(1,1,1)
-    ax1.scatter(x, xT, c='r', marker='+', label = 'kazt')
-    ax1.scatter(xs, xsT, c='b',  marker='*', alpha = 0.5, label = 'three')
+    ax1.scatter(x, xT, color='r', marker='+', label = 'kazt')
+    ax1.scatter(xs, xsT, color='b',  marker='*', alpha = 0.5, label = 'three')
     ax1.set_aspect('equal', adjustable='box')
     plt.legend()
     plt.xlabel('broadcast')
     plt.ylabel('receive')
+    
+    # fit
+    p = np.polyfit(x,xT,1)
+    p = np.poly1d(p)
+    ax1.plot(x, p(x), color='r', linestyle='dashed', linewidth=0.5)
+    ps = np.polyfit(xs,xsT,1)
+    ps = np.poly1d(ps)
+    ax1.plot(x, ps(x), color='b', linestyle='dashed', linewidth=0.5)
+
+    # save
     figure_save_path = './cen/centop_nw_br'
     if not os.path.exists(figure_save_path):
         os.makedirs(figure_save_path)
