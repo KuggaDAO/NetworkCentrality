@@ -77,7 +77,7 @@ def meanr(token,T,s,percent):
 
         # GMRES
         cputime = time.process_time()
-        x, exitCode = spla.gmres(I-a*A, b) # 默认restart=20,x即为完整的kazt中心性向量,exitCode=0表示success
+        x, exitCode = spla.gmres(I-a*A.T, b) # 默认restart=20,x即为完整的kazt中心性向量,exitCode=0表示success
         cputime_gmres.append(time.process_time() - cputime)
 
         # three degrees

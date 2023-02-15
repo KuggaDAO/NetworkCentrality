@@ -67,7 +67,7 @@ def centime_nw(token,T,beta):
 
         # GMRES
         cputime = time.process_time()
-        x, exitCode = spla.gmres(I-a*A, x) # 默认restart=20,x即为完整的kazt中心性向量,exitCode=0表示success
+        x, exitCode = spla.gmres(I-a*A.T, x) # 默认restart=20,x即为完整的kazt中心性向量,exitCode=0表示success
         x = x/max(abs(x)) # 归一化
         cputime_gmres.append(time.process_time() - cputime)
 
