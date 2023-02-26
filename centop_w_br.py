@@ -54,7 +54,7 @@ def centop_w_br(token):
     xsT = b + a*A@xsT
     xsT = xsT/max(abs(xsT))
 
-
+    # plot
     fig = plt.figure()
     ax1 = fig.add_subplot(1,1,1)
     ax1.scatter(x, xT, c='r', marker='+', label = 'kazt')

@@ -14,8 +14,8 @@ import os
 
 # settings
 token = 'panda'
-T = timedelta(days=10)# 间隔为T的时间保持影响力，单位为天
-s = timedelta(days=5)# 起始时间间隔，单位为天
+T = timedelta(days=30)# 间隔为T的时间保持影响力，单位为天
+s = timedelta(days=1)# 起始时间间隔，单位为天
 beta = 0.0001
 percent = [0.010,0.020,0.030,0.040,0.050,0.060,0.070,0.080,0.090]
 # percent = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009]# 当NG*percent<1时会报错
@@ -105,10 +105,11 @@ def meanr(token,T,s,percent,beta):
 
     # 画图
     for i in range(len(percent)):
+        times = pd.to_datetime(times)
         fig = plt.figure(figsize=(10,5))
         ax1 = fig.add_subplot(1,1,1)
         ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        ax1.xaxis.set_major_locator(mdates.MonthLocator())
+        #ax1.xaxis.set_major_locator(mdates.MonthLocator())
         ax1.plot(times, xr[i], 'r', label = 'katz')
         ax1.plot(times, xsr[i], 'b', label = 'three')
         plt.legend()
@@ -118,7 +119,7 @@ def meanr(token,T,s,percent,beta):
         figure_save_path = './cen/centop_nw/'+token+'_b'+str(beta)
         if not os.path.exists(figure_save_path):
             os.makedirs(figure_save_path)
-        plt.savefig(figure_save_path+'/'+token+'_T'+str(T)+'_top'+str(percent[i])+'.png')
+        plt.savefig(figure_save_path+'/'+token+'_T'+str(T)+'_s'+str(s)+'_top'+str(percent[i])+'.png')
     return
 
 meanr(token,T,s,percent,beta)

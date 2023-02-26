@@ -80,10 +80,11 @@ def centrality_w(token,T,s):
         times.append(t)
         t = t + s
 
+    times = pd.to_datetime(times)
     fig = plt.figure(figsize=(10,5))
     ax1 = fig.add_subplot(2,1,1)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    ax1.xaxis.set_major_locator(mdates.MonthLocator())
+    #ax1.xaxis.set_major_locator(mdates.MonthLocator())
     ax1.plot(times, cputime_gmres, 'r', label = 'solve_gmres')
     ax1.plot(times, cputime_s, 'b', label = 'three_degrees')
     plt.legend()
@@ -91,7 +92,7 @@ def centrality_w(token,T,s):
     plt.ylabel('cputime')
     ax2 = fig.add_subplot(2,1,2)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    ax2.xaxis.set_major_locator(mdates.MonthLocator())
+    #ax2.xaxis.set_major_locator(mdates.MonthLocator())
     ax2.plot(times, prop_max, 'r', label = 'prop_max')
     ax2.plot(times, prop_min, 'b', label = 'prop_min')
     plt.legend()
