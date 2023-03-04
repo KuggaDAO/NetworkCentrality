@@ -5,8 +5,8 @@ import scipy.sparse.linalg as spla
 import matplotlib.pyplot as plt
 import os
 
-token = 'people'# MKR_1e-6不让做了
-beta = 1e-6
+token = 'panda'# MKR_1e-6不让做了
+beta = 1e-4
 
 def scale(n):
     # 创建叶子结点中心性与网络规模的联系

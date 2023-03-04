@@ -9,11 +9,12 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import heapq # 数组最大n个值
 import os
+from scipy.signal import savgol_filter #滤波trend
 
 # 考虑无权图 因此我们选取value>max*beta的数据
 
 # settings
-token = 'panda'
+token = 'bank'
 T = timedelta(days=30)# 间隔为T的时间保持影响力，单位为天
 s = timedelta(days=1)# 起始时间间隔，单位为天
 beta = 0.0001
@@ -99,23 +100,32 @@ def meanr(token,T,s,percent,beta):
             xstop = heapq.nlargest(N,xs)
             xr[i].append(np.mean(xtop)/np.mean(x))
             xsr[i].append(np.mean(xstop)/np.mean(xs))
-
         times.append(t)
         t = t + s
 
-    # 画图
+    # plot
     for i in range(len(percent)):
         times = pd.to_datetime(times)
         fig = plt.figure(figsize=(10,5))
+
         ax1 = fig.add_subplot(1,1,1)
         ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         #ax1.xaxis.set_major_locator(mdates.MonthLocator())
+        
+        # data
         ax1.plot(times, xr[i], 'r', label = 'katz')
         ax1.plot(times, xsr[i], 'b', label = 'three')
+
+        # trend
+        ax1.plot(times, savgol_filter(xr[i], 30, 2), 'm--', label = 'katz_trend')
+        ax1.plot(times, savgol_filter(xsr[i], 30, 2), 'k--', label = 'three_trend')
+
         plt.legend()
         plt.xlabel('time')
         plt.ylabel('meanr')
         plt.gcf().autofmt_xdate()  # 自动旋转日期标记
+        plt.title(token+' T='+str(T)+' s='+str(s)+' top'+str(percent[i]))
+        plt.show()
         figure_save_path = './cen/centop_nw/'+token+'_b'+str(beta)
         if not os.path.exists(figure_save_path):
             os.makedirs(figure_save_path)
