@@ -29,4 +29,9 @@ data文件为代币输入数据，具体见P大网盘，其它文件夹为对应
 **centop_nw_br.py:** 上述文件**转化为无权图的版本**。
 输入data中文件的token文件名、关于权值的边选择参数beta，输出二维坐标系的图片，结果图片文件名格式为token_b_n.png(其中n是当前网络规模)。
 
-**main.py:** 考虑可重叠观察时间+无权图+时间序列，考虑的是Katz Receive & Katz Broadcast的top均值与全体均值的百分比变化
+## package
+**main.py:** 为主要脚本提供主要函数
+
+## 主要脚本
+**cenmain.py:** 利用main.py，考虑可重叠观察时间+无权图+时间序列，考虑的是Katz Receive & Katz Broadcast的top均值与全体均值的百分比变化
+**individual.py:** 考虑头部个体的活跃时间段

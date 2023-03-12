@@ -5,7 +5,7 @@ import scipy.sparse.linalg as spla
 import matplotlib.pyplot as plt
 import os
 
-token = 'panda'# MKR_1e-6不让做了
+token = 'DAI_c_d'# MKR_1e-6不让做了
 beta = 1e-4
 
 def scale(n):
@@ -72,12 +72,7 @@ def centop_nw_br(token,beta):
     ps = np.polyfit(xs,xsT,1)
     ps = np.poly1d(ps)
     ax1.plot(x, ps(x), color='b', linestyle='dashed', linewidth=0.5)
-
-    # save
-    figure_save_path = './cen/centop_nw_br'
-    if not os.path.exists(figure_save_path):
-        os.makedirs(figure_save_path)
-    plt.savefig(figure_save_path+'/'+token+'_b'+str(beta)+'_n'+str(n)+'.png')
+    plt.show()
 
     return
 
