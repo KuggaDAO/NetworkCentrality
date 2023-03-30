@@ -59,7 +59,7 @@ def time_dependent(edge, start_time, end_time, Tw, a):
             xb = b
 
         # alpha--spectrum
-        rho, vec = spla.eigs(A, k=1) # vec用不到
+        rho = spla.eigs(A, k=1,return_eigenvectors=False) # 关掉求特征值！
         alpha = a/abs(rho) # 文献设置
 
         # GMRES
@@ -109,7 +109,7 @@ def process(df, T, s, Tw, a, percent):
 def figplot(token, percent, times, xrrate, xbrate, T, degree, beta, Tsg, s, Tw, a):
     times = pd.to_datetime(times)
 
-    fig = plt.figure(figsize=(10,8))
+    fig = plt.figure(figsize=(12,6))
     ax1 = fig.add_subplot(211)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
     for p in percent:
@@ -118,7 +118,7 @@ def figplot(token, percent, times, xrrate, xbrate, T, degree, beta, Tsg, s, Tw, 
         # trend
         xr_smooth = savgol_filter(xrrate[percent.index(p)], Tsg, degree)
         ax1.plot(times, xr_smooth, '--',linewidth = 2, label='trend'+str(int(p*100))+'%')
-    plt.legend()
+    ax1.legend(fontsize = 8)
     plt.ylabel('top mean receive/mean receive')
     plt.title('Katz broadcast '+str(token)+' beta'+str(beta)+' T'+str(T.days)+' s'+str(s.days)+' Tw'+str(Tw)+' a'+str(a))
 
@@ -128,7 +128,7 @@ def figplot(token, percent, times, xrrate, xbrate, T, degree, beta, Tsg, s, Tw, 
         ax2.plot(times, xbrate[percent.index(p)], label='katz broadcast'+str(int(p*100))+'%')
         xb_smooth = savgol_filter(xbrate[percent.index(p)], Tsg, degree)
         ax2.plot(times, xb_smooth, '--',linewidth = 2, label='trend'+str(int(p*100))+'%')
-    plt.legend()
+    ax2.legend(fontsize = 8)
     plt.ylabel('top mean broadcast/mean broadcast')
     plt.gcf().autofmt_xdate()  # 自动旋转日期标记
     plt.title('Katz receive '+str(token)+' beta'+str(beta)+' T'+str(T.days)+' s'+str(s.days)+' Tw'+str(Tw)+' a'+str(a))

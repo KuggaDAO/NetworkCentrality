@@ -6,14 +6,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # settings
-token = 'SAI'
+token = 'MKR'
 beta = 1e-4# 考虑无权图 因此我们选取value>max*beta的数据
+# T,s,Tw为90,5,15,数据小时s=1
 T = timedelta(days = 90)# 间隔为T的时间保持影响力，单位为天
 s = timedelta(days = 5)# 起始时间间隔，单位为天
 Tw = timedelta(days = 15) # time-dependent中的时间窗口
 a = 0.9 # alpha = a/rho ,a=0.9来自文献总结
 lbound = 0.5
-percent = [0.020,0.040,0.060,0.080]
+percent = [0.020,0.040]
 degree = 2
 Tsg = 30 # Tsg代表几个s
 
@@ -46,6 +47,8 @@ def katz_individual(df, T, s, Tw, a, lbound, percent):
     for p in percent:
         xrrate.append([])
         xbrate.append([])
+    num_node = []
+    num_edge = []
 
     # time window
     while t >= start_time and t+T <=end_time:
@@ -54,6 +57,9 @@ def katz_individual(df, T, s, Tw, a, lbound, percent):
         con2 = df["time"] <= t+T
         edge = df[con1 & con2].values
         NG, nodes = main.total_nodes(edge)
+        num_node.append(NG)
+        num_edge.append(len(edge))
+
         xr,xb = main.time_dependent(edge, t, t + T, Tw, a)
         for p in percent:
             xrrate[percent.index(p)].append(main.meanr(xr, p, NG))
@@ -70,32 +76,50 @@ def katz_individual(df, T, s, Tw, a, lbound, percent):
                 d[nodes[i]].append(t)
             else:
                 d[nodes[i]] = [t]
-        
+
         print(t)
         times.append(t)
         t = t + s
-    return d,xrrate,xbrate,times
+    return d,xrrate,xbrate,times,num_node,num_edge
 
 # plot
 def dicplot(d, T, s, Tw, a, lbound):
-    fig = plt.figure(figsize=(10,6))
+    fig = plt.figure(figsize=(12,6))
     ax = fig.add_subplot(111)
     center = []
     for key in d:
         d[key] = pd.to_datetime(d[key])
         center.append(key)
         ax.plot(d[key], [key[:10]]*len(d[key]), 'o')
-    plt.title(token + 'Individuals with katz centrality > '+str(lbound)+' T'+str(T.days)+' s'+str(s.days)+' Tw'+str(Tw)+' a'+str(a))
+    plt.title(token + ' Individuals with katz centrality > '+str(lbound)+' T'+str(T.days)+' s'+str(s.days)+' Tw'+str(Tw.days)+' a'+str(a))
     plt.xlabel('time')
     plt.ylabel('individual')
     ax.set_yticks([])# 关闭y轴刻度，实际上从下到上就是按csv文件中的顺序排列
     plt.show()
     return fig,center
 
-d,xrrate,xbrate,times = katz_individual(df, T, s, Tw, a, lbound, percent)
+def scaleplot(times,num_node,num_edge):
+    fig = plt.figure(figsize=(12,6))
+    ax1 = fig.add_subplot(211)
+    ax2 = fig.add_subplot(212)
+    ax1.plot(times,num_node)
+    ax1.set_ylabel('number of nodes')
+    ax2.plot(times,num_edge)
+    ax2.set_ylabel('number of edges')
+    ax1.set_title('the scale of '+token)
+    plt.show()
+    return fig
+
+d,xrrate,xbrate,times,num_node,num_edge = katz_individual(df, T, s, Tw, a, lbound, percent)
+figs = scaleplot(times, num_node,num_edge)
 fig,center = dicplot(d, T, s, Tw, a, lbound)
 figr = main.figplot(token, percent, times, xrrate, xbrate, T, degree, beta, Tsg, s, Tw, a)
 center = pd.DataFrame(center)
 center.to_csv(token+'_'+str(lbound)+'_'+str(T)+'_'+str(s)+'_'+str(Tw)+'.csv')
+
+
+'''
+# error
 d = pd.DataFrame.from_dict(d)
 d.to_csv('dictionary'+token+'_'+str(lbound)+'_'+str(T)+'_'+str(s)+'_'+str(Tw)+'.csv')
+'''
